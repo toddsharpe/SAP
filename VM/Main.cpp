@@ -11,11 +11,26 @@ using namespace SAP1;
 
 int main(int argc, char** argv)
 {
+	std::cout << "SAP1 Virtual Machine" << std::endl;
+
 	if (argc != 2)
 	{
 		std::cout << "Usage: VM.exe out_bin" << std::endl;
 		return -1;
 	}
+
+	//Read bin
+	ifstream bin(argv[1], std::ios_base::binary);
+	Assert(bin.is_open());
+
+	//Get length of file
+	bin.seekg(0, std::ios::end);
+	size_t length = bin.tellg();
+
+	//Read file to byte array
+	uint8_t* memory = new uint8_t[length];
+	bin.seekg(0, std::ios::beg);
+	bin.read((char*)memory, length);
 
 	//Machine model
 	uint8_t PC = 0;
@@ -27,18 +42,7 @@ int main(int argc, char** argv)
 	uint8_t OUT = 0;
 	bool running = true;
 
-	ifstream bin(argv[1], std::ios_base::binary);
-	Assert(bin.is_open());
-
-	//get length of file
-	bin.seekg(0, std::ios::end);
-	size_t length = bin.tellg();
-	bin.seekg(0, std::ios::beg);
-
-	//read file
-	uint8_t* memory = new uint8_t[length];
-	bin.read((char*)memory, length);
-
+	std::cout << "Out: " << std::endl;
 	while (running)
 	{
 		uint8_t byte = memory[PC];
@@ -114,12 +118,14 @@ int main(int argc, char** argv)
 
 		PC++;
 	}
+	std::cout << std::endl;
 
-	std::cout << "SAP1 State:" << std::endl;
+	std::cout << "Machine State:" << std::endl;
 	std::cout << "PC 0x" << std::hex << (int)PC << std::endl;
 	std::cout << "A 0x" << std::hex << (int)A << std::endl;
 	std::cout << "B 0x" << std::hex << (int)B << std::endl;
 	std::cout << "CF "<< (int)CF << std::endl;
 	std::cout << "ZF " << (int)ZF << std::endl;
 	std::cout << "OUT 0x" << std::hex << (int)OUT << std::endl;
+	std::cout << std::endl << "Done!" << std::endl;
 }

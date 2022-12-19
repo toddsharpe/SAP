@@ -14,6 +14,8 @@ void WriteMem(const std::string & mem_file, Program& program);
 
 int main(int argc, char** argv)
 {
+	std::cout << "SAP1 Assmebler" << std::endl;
+
 	if (argc < 3)
 	{
 		std::cout << "Usage: asm.exe asm_file out_bin [out_mem]" << std::endl;
@@ -22,6 +24,8 @@ int main(int argc, char** argv)
 
 	Program program;
 	ParseFile(std::string(argv[1]), program);
+	std::cout << "Loaded 0x" << std::hex << (int)program.Instructions.size() << " instructions." << std::endl;
+
 	WriteProgram(argv[2], program);
 
 	if (argc >= 4)

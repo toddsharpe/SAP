@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <map>
 #include <string>
+#include <array>
 
 namespace SAP1
 {
@@ -52,7 +53,10 @@ namespace SAP1
 
 	struct Program
 	{
-		Instruction Instructions[RamSize];
+		Program() : Instructions()
+		{}
+
+		std::array<Instruction, RamSize> Instructions;
 	};
 }
 ;
