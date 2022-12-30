@@ -10,18 +10,26 @@ using namespace SAP1;
 
 void ParseFile(const std::string& asm_file, Program& program);
 void WriteProgram(const std::string & bin_file, Program& program);
+void WriteMem(const std::string & mem_file, Program& program);
 
 int main(int argc, char** argv)
 {
-	if (argc != 3)
+	if (argc < 3)
 	{
-		std::cout << "Usage: asm.exe asm_file out_bin" << std::endl;
+		std::cout << "Usage: asm.exe asm_file out_bin [out_mem]" << std::endl;
 		return -1;
 	}
 
 	Program program;
 	ParseFile(std::string(argv[1]), program);
 	WriteProgram(argv[2], program);
+
+	if (argc >= 4)
+	{
+		WriteMem(argv[3], program);
+	}
+
+	return 0;
 }
 
 void ParseFile(const std::string& asm_file, Program& program)
@@ -113,6 +121,27 @@ void WriteProgram(const std::string& bin_file, Program& program)
 			//Arg is lower 4 bits
 			uint8_t value = (instruction.Opcode << 4) | instruction.Arg;
 			fout << value;
+			break;
+		}
+	}
+}
+
+void WriteMem(const std::string& mem_file, Program& program)
+{
+	ofstream fout(mem_file);
+	for (const Instruction& instruction : program.Instructions)
+	{
+		switch (instruction.Opcode)
+		{
+		case Opcodes::DATA:
+			fout << std::hex << (int)instruction.Arg << std::endl;
+			break;
+
+		default:
+			//Opcode is upper 4 bits
+			//Arg is lower 4 bits
+			uint8_t value = (instruction.Opcode << 4) | instruction.Arg;
+			fout << std::hex << (int)value << std::endl;
 			break;
 		}
 	}

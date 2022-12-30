@@ -101,7 +101,7 @@ int main(int argc, char** argv)
 
 		case Opcodes::OUT:
 			OUT = A;
-			std::cout << (int)OUT << "\n";
+			std::cout << std::hex << "0x" << (int)OUT << "\n";
 			break;
 
 		case Opcodes::HLT:

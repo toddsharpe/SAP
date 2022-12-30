@@ -8,3 +8,10 @@
 # build folders
 obj/
 build/
+
+# FPGA
+FPGA/sap1.cache
+FPGA/sap1.hw
+FPGA/sap1.runs
+FPGA/sap1.sim
+FPGA/vivado*

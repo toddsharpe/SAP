@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ASM", "Toolchain\ASM\ASM.vcxproj", "{C2896446-C693-409B-806D-7680D7243304}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ASM", "Tools\ASM\ASM.vcxproj", "{C2896446-C693-409B-806D-7680D7243304}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Inc", "Inc", "{AED455F8-1C6C-4160-8044-372936AFF665}"
 	ProjectSection(SolutionItems) = preProject
@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Inc", "Inc", "{AED455F8-1C6
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VM", "VM\VM.vcxproj", "{E6035604-10BD-40EC-AA2F-0AB8A5A2FD50}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UCode", "Tools\UCode\UCode.vcxproj", "{E4F9F6DE-F141-4547-BC87-E2B9968A6DDC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +38,14 @@ Global
 		{E6035604-10BD-40EC-AA2F-0AB8A5A2FD50}.Release|x64.Build.0 = Release|x64
 		{E6035604-10BD-40EC-AA2F-0AB8A5A2FD50}.Release|x86.ActiveCfg = Release|Win32
 		{E6035604-10BD-40EC-AA2F-0AB8A5A2FD50}.Release|x86.Build.0 = Release|Win32
+		{E4F9F6DE-F141-4547-BC87-E2B9968A6DDC}.Debug|x64.ActiveCfg = Debug|x64
+		{E4F9F6DE-F141-4547-BC87-E2B9968A6DDC}.Debug|x64.Build.0 = Debug|x64
+		{E4F9F6DE-F141-4547-BC87-E2B9968A6DDC}.Debug|x86.ActiveCfg = Debug|Win32
+		{E4F9F6DE-F141-4547-BC87-E2B9968A6DDC}.Debug|x86.Build.0 = Debug|Win32
+		{E4F9F6DE-F141-4547-BC87-E2B9968A6DDC}.Release|x64.ActiveCfg = Release|x64
+		{E4F9F6DE-F141-4547-BC87-E2B9968A6DDC}.Release|x64.Build.0 = Release|x64
+		{E4F9F6DE-F141-4547-BC87-E2B9968A6DDC}.Release|x86.ActiveCfg = Release|Win32
+		{E4F9F6DE-F141-4547-BC87-E2B9968A6DDC}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
