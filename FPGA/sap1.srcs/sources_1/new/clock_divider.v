@@ -27,7 +27,7 @@ module clock_divider
     output reg clk_div
     );
 
-localparam count_max = 100000000 / FREQ;
+localparam count_max = 100000000 / (FREQ / 2);
 
 reg [31:0] counter;
 
