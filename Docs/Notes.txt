@@ -22,3 +22,5 @@ https://karenok.github.io/SAP-1-Computer/#sap-1-components
 | 1111 - HLT --> Halts the execution
  -------------------------------------------------------------------------------------------------------------------------------
 
+Microcode
+https://github.com/beneater/eeprom-programmer/blob/master/microcode-eeprom-with-flags/microcode-eeprom-with-flags.ino
