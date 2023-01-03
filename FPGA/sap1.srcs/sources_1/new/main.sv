@@ -32,8 +32,12 @@ module main(
     output [15:0] led
     );
 
-    //SAP
+    //SAP1 Input
+    wire cpu_clk;
     wire reset;
+
+    //SAP1 Output
+    wire [2:0] step;
     wire [7:0] w_bus;
     wire [7:0] a_reg_out;
     wire [7:0] b_reg_out;
@@ -44,31 +48,42 @@ module main(
     wire [7:0] instruction_reg_out;
     wire [7:0] ram_out;
     wire [15:0] decoded_out;
+    wire halt;
 
-    //Decoder wires
-    wire [2:0] step;
-    wire alu_C;
-    wire alu_Z;
-    wire flags_C;
-    wire flags_Z;
+    //SAP1
+    Sap1 sap1(
+        .clk(cpu_clk),
+        .reset(reset),
+        .step(step),
+        .w_bus(w_bus),
+        .a_reg_out(a_reg_out),
+        .b_reg_out(b_reg_out),
+        .flags_out(flags_out),
+        .output_reg_out(output_reg_out),
+        .pc_reg_out(pc_reg_out),
+        .memaddr_reg_out(memaddr_reg_out),
+        .instruction_reg_out(instruction_reg_out),
+        .ram_out(ram_out),
+        .decoded_out(decoded_out),
+        .halt(halt)
+    );
 
-    //Control signals (provided by microcode)
-    wire flags_latch;   //FI
-    wire pc_latch;      //J
-    wire pc_enable;     //CO
-    wire pc_inc;        //CE
-    wire output_latch;  //OI
-    wire b_reg_latch;   //BI
-    wire alu_sub;       //SU
-    wire alu_enable;    //EO
-    wire a_reg_enable;  //AO
-    wire a_reg_latch;   //AI
-    wire ir_latch;      //II
-    wire ir_enable;     //IO
-    wire ram_enable;    //RO
-    wire ram_latch;     //RI
-    wire mar_latch;     //MI
-    wire halt;          //HLT
+    //VIO
+    vio_sap1 vio (
+        .clk(clk),                          // input wire clk
+        .probe_in0(step),                   // input wire [2 : 0] probe_in0
+        .probe_in1(w_bus),                  // input wire [7 : 0] probe_in1
+        .probe_in2(a_reg_out),              // input wire [7 : 0] probe_in2
+        .probe_in3(b_reg_out),              // input wire [7 : 0] probe_in3
+        .probe_in4(flags_out),              // input wire [7 : 0] probe_in4
+        .probe_in5(output_reg_out),         // input wire [7 : 0] probe_in5
+        .probe_in6(pc_reg_out),             // input wire [7 : 0] probe_in6
+        .probe_in7(memaddr_reg_out),        // input wire [7 : 0] probe_in7
+        .probe_in8(instruction_reg_out),    // input wire [7 : 0] probe_in8
+        .probe_in9(ram_out),                // input wire [7 : 0] probe_in9
+        .probe_in10(decoded_out),           // input wire [15 : 0] probe_in10
+        .probe_in11(halt)                   // input wire [0 : 0] probe_in11
+    );
 
     //Display
     wire [15:0] led_out;
@@ -101,7 +116,6 @@ module main(
     wire clk_32hz;
     wire clk_64hz;
     wire clk_128hz;
-    wire cpu_clk;
 
     button_pressed btnC_pressed(
         .clk(clk),
@@ -145,124 +159,6 @@ module main(
                                 (sw[1] ? clk_16hz : 
                                     (sw[0] ? clk_8hz :
                                         manual_clk))))) & (~halt | reset);
-
-    Register a_reg(
-        .clk(cpu_clk),
-        .reset(reset),
-        .DATA(w_bus),
-        .REG_OUT(a_reg_out),
-        .latch(a_reg_latch),
-        .enable(a_reg_enable)
-    );
-
-    Register b_reg(
-        .clk(cpu_clk),
-        .reset(reset),
-        .DATA(w_bus),
-        .REG_OUT(b_reg_out),
-        .latch(b_reg_latch),
-        .enable(8'b00000000)
-    );
-
-    ALU alu(
-        .a_reg_data(a_reg_out),
-        .b_reg_data(b_reg_out),
-        .DATA(w_bus),
-        .enable(alu_enable),
-        .sub(alu_sub),
-        .C(alu_C),
-        .Z(alu_Z)
-    );
-
-    FlagsRegister flags(
-        .clk(cpu_clk),
-        .reset(reset),
-        .REG_OUT(flags_out),
-        .c_in(alu_C),
-        .z_in(alu_Z),
-        .latch(flags_latch),
-        .c_out(flags_C),
-        .z_out(flags_Z)
-    );
-
-    Register output_reg(
-        .clk(cpu_clk),
-        .reset(reset),
-        .DATA(w_bus),
-        .REG_OUT(output_reg_out),
-        .latch(output_latch),
-        .enable(8'b00000000)
-    );
-
-    ProgramCounter pc(
-        .clk(cpu_clk),
-        .reset(reset),
-        .DATA(w_bus[3:0]),
-        .REG_OUT(pc_reg_out),
-        .latch(pc_latch),
-        .enable(pc_enable),
-        .inc(pc_inc)
-    );
-
-    Register memaddr_reg(
-        .clk(cpu_clk),
-        .reset(reset),
-        .DATA(w_bus),
-        .REG_OUT(memaddr_reg_out),
-        .latch(mar_latch),
-        .enable()
-    );
-
-    RAM ram(
-        .clk(cpu_clk),
-        .reset(reset),
-        .ADDR(memaddr_reg_out[3:0]),
-        .DATA(w_bus),
-        .DATA_OUT(ram_out),
-        .latch(ram_latch),
-        .enable(ram_enable)
-    );
-
-    InstructionRegister instruction_reg(
-        .clk(cpu_clk),
-        .reset(reset),
-        .DATA(w_bus),
-        .REG_OUT(instruction_reg_out),
-        .latch(ir_latch),
-        .enable(ir_enable)
-    );
-
-    InstructionStepCounter counter(
-        .clk(cpu_clk),
-        .reset(reset),
-        .STEP(step)
-    );
-
-    Decoder decoder(
-        .DATA(instruction_reg_out[7:4]),
-        .STEP(step),
-        .C(flags_C),
-        .Z(flags_Z),
-        .DECODED_OUT(decoded_out),
-        .flags_latch(flags_latch),
-        .pc_latch(pc_latch),
-        .pc_enable(pc_enable),
-        .pc_inc(pc_inc),
-        .output_latch(output_latch),
-        .b_reg_latch(b_reg_latch),
-        .alu_sub(alu_sub),
-        .alu_enable(alu_enable),
-        .a_reg_enable(a_reg_enable),
-        .a_reg_latch(a_reg_latch),
-        .ir_latch(ir_latch),
-        .ir_enable(ir_enable),
-        .ram_enable(ram_enable),
-        .ram_latch(ram_latch),
-        .mar_latch(mar_latch),
-        .halt(halt)
-    );
-
-    //Update LEDs
     assign reset = sw15;
     assign led = halt ? {16'hFFFF} : (reset ? {16'h0000} : decoded_out);
 

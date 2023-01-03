@@ -14,4 +14,5 @@ FPGA/sap1.cache
 FPGA/sap1.hw
 FPGA/sap1.runs
 FPGA/sap1.sim
+FPGA/sap1.ip_user_files
 FPGA/vivado*

@@ -48,11 +48,11 @@ module RegDisplay
     always @(posedge clk)
     begin
         if (inc_pressed && (index < REG_COUNT - 1)) begin
-            index++;
+            index = index + 1;
         end
 
         if (dec_pressed && (index > 0)) begin
-            index--;
+            index = index - 1;
         end
     end
 
