@@ -7,6 +7,7 @@ https://github.com/dangrie158/SAP-1/
 https://github.com/michaelkamprath/eater-sap-1-improvements
 https://austinmorlan.com/posts/8bit_breadboard_fpga/
 https://karenok.github.io/SAP-1-Computer/#sap-1-components
+https://dangrie158.github.io/SAP-1/block-diagram.html
 
  -------------------------------------------------------------------------------------------------------------------------------
 | 0000 - NOP --> No Operation

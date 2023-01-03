@@ -77,7 +77,6 @@ module LedSegmentsController(
             4'b1101: return 7'b0100001; // "D"
             4'b1110: return 7'b0000110; // "E"
             4'b1111: return 7'b0001110; // "F"
-            default: return 7'b0111111; // "-"
             endcase
         end
     endfunction : LedOut

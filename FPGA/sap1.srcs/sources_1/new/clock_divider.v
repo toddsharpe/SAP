@@ -31,9 +31,9 @@ localparam count_max = 100000000 / (FREQ / 2);
 
 reg [31:0] counter;
 
-always @ (posedge(clk), posedge(reset))
+always @ (posedge(clk))
 begin
-    if (reset == 1'b1)
+    if (reset)
         counter <= 32'b0;
     else if (counter == count_max - 1)
         counter <= 32'b0;
@@ -41,9 +41,9 @@ begin
         counter <= counter + 1;
 end
 
-always @ (posedge(clk), posedge(reset))
+always @ (posedge(clk))
 begin
-    if (reset == 1'b1)
+    if (reset)
         clk_div <= 1'b0;
     else if (counter == count_max - 1)
         clk_div <= ~clk_div;
