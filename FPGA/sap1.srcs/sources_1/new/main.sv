@@ -25,8 +25,8 @@ module main(
     input btnC,
     input btnU,
     input btnD,
-    input btnL,
     input [4:0] sw,
+    input sw15,
     output [3:0] an,
     output [6:0] seg,
     output [15:0] led
@@ -94,13 +94,6 @@ module main(
     
     LedSegmentsController segDisplay(.clk(clk), .value(led_out), .an(an), .seg(seg));
 
-    //Reset
-    button_pressed reset_pressed(
-        .clk(clk),
-        .button(btnL),
-        .pressed(reset)
-    );
-
     //Clocks
     wire manual_clk;
     wire clk_8hz;
@@ -118,31 +111,31 @@ module main(
 
     clock_divider #(.FREQ(8)) clk_8(
         .clk(clk),
-        .reset(reset),
+        .reset(),
         .clk_div(clk_8hz)
     );
 
     clock_divider #(.FREQ(16)) clk_16(
         .clk(clk),
-        .reset(reset),
+        .reset(),
         .clk_div(clk_16hz)
     );
 
     clock_divider #(.FREQ(32)) clk_32(
         .clk(clk),
-        .reset(reset),
+        .reset(),
         .clk_div(clk_32hz)
     );
 
     clock_divider #(.FREQ(64)) clk_64(
         .clk(clk),
-        .reset(reset),
+        .reset(),
         .clk_div(clk_64hz)
     );
 
     clock_divider #(.FREQ(128)) clk_128(
         .clk(clk),
-        .reset(reset),
+        .reset(),
         .clk_div(clk_128hz)
     );
 
@@ -151,7 +144,7 @@ module main(
                             (sw[2] ? clk_32hz : 
                                 (sw[1] ? clk_16hz : 
                                     (sw[0] ? clk_8hz :
-                                        manual_clk))))) & ~halt;
+                                        manual_clk))))) & (~halt | reset);
 
     Register a_reg(
         .clk(cpu_clk),
@@ -270,7 +263,8 @@ module main(
     );
 
     //Update LEDs
-    assign led = halt ? {16'hFFFF} : decoded_out;
+    assign reset = sw15;
+    assign led = halt ? {16'hFFFF} : (reset ? {16'h0000} : decoded_out);
 
 endmodule
 
